@@ -1,80 +1,72 @@
-package org.dromara.domain;
+package org.dromara.domain.vo;
 
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
+import org.dromara.domain.Audit;
 
 import java.io.Serial;
-import java.math.BigDecimal;
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
- * 【请填写功能名称】对象 a_order
+ * 【请填写功能名称】视图对象 a_order
  *
  * @author Lion Li
  * @date 2024-04-16
  */
 @Data
-@TableName("a_order")
-public class AOrder {
+@ExcelIgnoreUnannotated
+@AutoMapper(target = Audit.class)
+public class AuditAO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-
+    /**
+     * 主键
+     */
     @TableId(value = "id")
     private Long id;
 
-    private String title;
+    private String userId;
 
-    // 客服
-    private String kf;
+    private String qq;
 
-    // 旺旺号
-    private String wangwang;
+    private String qqMail;
 
-    // 提成金额
-    private BigDecimal money;
+    private String zfb;
 
-    // 订单状态
-    private String orderStatus;
+    private String name;
 
-    // 结算状态
-    private String jsStatus;
+    private String work;
 
-    // 订单评价
-    private String common;
+    private String proficient;
 
-    //下单时间
+    private String sfz;
+
+    private String sfzImg;
+
+    private String phonenumber;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date xdTime;
+    private LocalDateTime creatTime;
 
-    // 交付时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date jfTime;
+    private LocalDateTime updateTime;
 
     /**
      * 2代表删除
      */
     @TableLogic
     private String delFlag;
-
-    private String type;
-
-    /**
-     * 创建时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateTime;
-
 
     /**
      * 请求参数

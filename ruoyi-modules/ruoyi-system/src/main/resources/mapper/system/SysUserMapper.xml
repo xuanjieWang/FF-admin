@@ -44,6 +44,8 @@
                u.create_by,
                u.create_time,
                u.remark,
+               u.regis_status,
+               u.designer_type,
                d.dept_id,
                d.parent_id,
                d.ancestors,

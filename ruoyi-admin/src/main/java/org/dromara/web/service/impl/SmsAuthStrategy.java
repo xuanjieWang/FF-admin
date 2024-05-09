@@ -73,6 +73,11 @@ public class SmsAuthStrategy implements IAuthStrategy {
         return loginVo;
     }
 
+    @Override
+    public LoginVo smsLogin(String body, SysClient client) {
+        return null;
+    }
+
     /**
      * 校验短信验证码
      */

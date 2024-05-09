@@ -3,6 +3,7 @@ package org.dromara.service;
 
 import org.dromara.common.mybatis.core.page.PageQuery;
 import org.dromara.common.mybatis.core.page.TableDataInfo;
+import org.dromara.domain.AOrder;
 import org.dromara.domain.bo.AOrderBo;
 import org.dromara.domain.vo.AOrderVo;
 
@@ -35,7 +36,7 @@ public interface IAOrderService {
     /**
      * 新增【请填写功能名称】
      */
-    Boolean insertByBo(AOrderBo bo);
+    Boolean insertByBo(AOrder order);
 
     /**
      * 修改【请填写功能名称】

@@ -166,6 +166,11 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         return baseMapper.selectUserById(userId);
     }
 
+    @Override
+    public SysUser selectById(Long userId) {
+        return baseMapper.selectById(userId);
+    }
+
     /**
      * 查询用户所属角色组
      *
@@ -196,6 +201,15 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         return StreamUtils.join(list, SysPostVo::getPostName);
     }
 
+    @Override
+    public boolean checkUserNameUnique(SysUser user) {
+        // 检查用户名是否相同，且不是同一条记录
+        boolean exist = baseMapper.exists(new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getUserName, user.getUserName())
+                .ne(ObjectUtil.isNotNull(user.getUserId()), SysUser::getUserId, user.getUserId()));
+        return !exist;
+    }
+
     /**
      * 校验用户名称是否唯一
      *
@@ -219,6 +233,22 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
     public boolean checkPhoneUnique(SysUserBo user) {
         boolean exist = baseMapper.exists(new LambdaQueryWrapper<SysUser>()
                 .eq(SysUser::getPhonenumber, user.getPhonenumber())
+                .ne(ObjectUtil.isNotNull(user.getUserId()), SysUser::getUserId, user.getUserId()));
+        return !exist;
+    }
+
+    @Override
+    public boolean checkPhoneUnique(SysUser user) {
+        boolean exist = baseMapper.exists(new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getPhonenumber, user.getPhonenumber())
+                .ne(ObjectUtil.isNotNull(user.getUserId()), SysUser::getUserId, user.getUserId()));
+        return !exist;
+    }
+
+    @Override
+    public boolean checkEmailUnique(SysUser user) {
+        boolean exist = baseMapper.exists(new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getEmail, user.getEmail())
                 .ne(ObjectUtil.isNotNull(user.getUserId()), SysUser::getUserId, user.getUserId()));
         return !exist;
     }
@@ -322,6 +352,16 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         }
         return flag;
     }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateUser1(SysUser user) {
+        int flag = baseMapper.updateById(user);
+        if (flag < 1) {
+            throw new ServiceException("修改用户" + user.getUserName() + "信息失败");
+        }
+        return flag;
+    }
+
 
     /**
      * 用户授权角色
@@ -407,6 +447,7 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         this.insertUserRole(user.getUserId(), user.getRoleIds(), clear);
     }
 
+
     /**
      * 新增用户岗位信息
      *
@@ -466,6 +507,15 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
             });
             userRoleMapper.insertBatch(list);
         }
+    }
+
+    private void insertUserRole(Long userId) {
+        // 添加设计师的角色
+        SysUserRole ur = new SysUserRole();
+        ur.setUserId(userId);
+        // 添加设计师的id
+        ur.setRoleId(1787375831862013953L);
+        userRoleMapper.insert(ur);
     }
 
     /**
@@ -529,6 +579,27 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         return baseMapper.selectVoList(lqw);
     }
 
+    // 添加设计师角色
+    @Override
+    public int insertRegisUser(SysUser user) {
+        // 新增用户信息
+        int rows = baseMapper.insert(user);
+        user.setUserId(user.getUserId());
+        // 新增用户与角色管理
+        insertUserRole(user.getUserId());
+        return rows;
+    }
+
+
+
+    @Override
+    public List<SysUser> selectList() {
+        LambdaQueryWrapper<SysUser> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(SysUser::getIsDesigner, "0");
+        lqw.eq(SysUser::getDelFlag, "0");
+        return baseMapper.selectList(lqw);
+    }
+
     @Cacheable(cacheNames = CacheNames.SYS_USER_NAME, key = "#userId")
     @Override
     public String selectUserNameById(Long userId) {
@@ -541,7 +612,7 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
     @Cacheable(cacheNames = CacheNames.SYS_NICKNAME, key = "#userId")
     public String selectNicknameById(Long userId) {
         SysUser sysUser = baseMapper.selectOne(new LambdaQueryWrapper<SysUser>()
-            .select(SysUser::getNickName).eq(SysUser::getUserId, userId));
+                .select(SysUser::getNickName).eq(SysUser::getUserId, userId));
         return ObjectUtil.isNull(sysUser) ? null : sysUser.getNickName();
     }
 }

@@ -74,6 +74,11 @@ public class XcxAuthStrategy implements IAuthStrategy {
         return loginVo;
     }
 
+    @Override
+    public LoginVo smsLogin(String body, SysClient client) {
+        return null;
+    }
+
     private SysUserVo loadUserByOpenid(String openid) {
         // 使用 openid 查询绑定用户 如未绑定用户 则根据业务自行处理 例如 创建默认用户
         // todo 自行实现 userService.selectUserByOpenid(openid);

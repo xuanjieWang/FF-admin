@@ -138,4 +138,20 @@ public class SysUserVo implements Serializable {
      */
     private Long roleId;
 
+    // 状态
+    private String regisStatus;
+
+    // 类别
+    private String designerType;
+
+    private String qq;
+    private String qqMail;
+    private String zfb;
+    private String wx;
+    private String name;
+    private String work;
+    private String proficient;
+    private String sfz;
+    private String sfzImg;
+
 }

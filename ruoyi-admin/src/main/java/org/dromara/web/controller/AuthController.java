@@ -30,12 +30,10 @@ import org.dromara.common.social.utils.SocialUtils;
 import org.dromara.common.tenant.helper.TenantHelper;
 import org.dromara.common.websocket.utils.WebSocketUtils;
 import org.dromara.system.domain.SysClient;
+import org.dromara.system.domain.SysUser;
 import org.dromara.system.domain.bo.SysTenantBo;
 import org.dromara.system.domain.vo.SysTenantVo;
-import org.dromara.system.service.ISysClientService;
-import org.dromara.system.service.ISysConfigService;
-import org.dromara.system.service.ISysSocialService;
-import org.dromara.system.service.ISysTenantService;
+import org.dromara.system.service.*;
 import org.dromara.web.domain.vo.LoginTenantVo;
 import org.dromara.web.domain.vo.LoginVo;
 import org.dromara.web.domain.vo.TenantListVo;
@@ -72,6 +70,7 @@ public class AuthController {
     private final ISysSocialService socialUserService;
     private final ISysClientService clientService;
     private final ScheduledExecutorService scheduledExecutorService;
+    private final ISysUserService userService;
 
     private String smsCode = "smsCode_";
 
@@ -109,9 +108,43 @@ public class AuthController {
         return R.ok(loginVo);
     }
 
+
+    /**
+     * 登录方法
+     *
+     * @param body 登录信息
+     * @return 结果
+     */
+    @ApiEncrypt
+    @PostMapping("/smsLogin")
+    public R<LoginVo> smsLogin(@RequestBody String body) {
+        LoginBody loginBody = JsonUtils.parseObject(body, LoginBody.class);
+        ValidatorUtils.validate(loginBody);
+        // 授权类型和客户端id
+        String clientId = loginBody.getClientId();
+        String grantType = loginBody.getGrantType();
+        SysClient client = clientService.queryByClientId(clientId);
+        // 查询不到 client 或 client 内不包含 grantType
+        if (ObjectUtil.isNull(client) || !StringUtils.contains(client.getGrantType(), grantType)) {
+            log.info("客户端id: {} 认证类型：{} 异常!.", clientId, grantType);
+            return R.fail(MessageUtils.message("auth.grant.type.error"));
+        } else if (!UserConstants.NORMAL.equals(client.getStatus())) {
+            return R.fail(MessageUtils.message("auth.grant.type.blocked"));
+        }
+        // 登录
+        LoginVo loginVo = IAuthStrategy.smsLogin(body, client, grantType);
+
+        Long userId = LoginHelper.getUserId();
+        scheduledExecutorService.schedule(() -> {
+            WebSocketUtils.sendMessage(userId, "欢迎登录风飞信息结算系统!");
+        }, 3, TimeUnit.SECONDS);
+        return R.ok(loginVo);
+    }
+
+
     /**
      * 1. 获取短信验证码
-     * **/
+     **/
     @PostMapping("/getSmsCode")
     public R getSmsCode(String phoneNumber) {
         //防止重复
@@ -214,6 +247,16 @@ public class AuthController {
     }
 
     /**
+     * 获取邀请码
+     */
+    @GetMapping("/getInviteCode")
+    public R<List<SysUser>> getInviteCode() {
+        List<SysUser> list = RedisUtils.getCacheList("InviteCode: ");
+        return R.ok(list);
+    }
+
+
+    /**
      * 登录页面租户下拉框
      *
      * @return 租户列表
@@ -240,5 +283,4 @@ public class AuthController {
         vo.setTenantEnabled(TenantHelper.isEnable());
         return R.ok(vo);
     }
-
 }

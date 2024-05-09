@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import org.dromara.common.core.utils.DateUtils;
 import org.dromara.common.core.utils.MapstructUtils;
-import org.dromara.common.core.utils.StringUtils;
 import org.dromara.common.mybatis.core.page.PageQuery;
 import org.dromara.common.mybatis.core.page.TableDataInfo;
 import org.dromara.domain.AOrder;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -44,7 +43,8 @@ public class AOrderServiceImpl implements IAOrderService {
      */
     @Override
     public TableDataInfo<AOrderVo> queryPageList(AOrderBo bo, PageQuery pageQuery) {
-        LambdaQueryWrapper<AOrder> lqw = buildQueryWrapper(bo);
+//        LambdaQueryWrapper<AOrder> lqw = buildQueryWrapper(bo);
+        LambdaQueryWrapper<AOrder> lqw = Wrappers.lambdaQuery();
         Page<AOrderVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
         return TableDataInfo.build(result);
     }
@@ -54,36 +54,38 @@ public class AOrderServiceImpl implements IAOrderService {
      */
     @Override
     public List<AOrderVo> queryList(AOrderBo bo) {
-        LambdaQueryWrapper<AOrder> lqw = buildQueryWrapper(bo);
+//        LambdaQueryWrapper<AOrder> lqw = buildQueryWrapper(bo);
+        LambdaQueryWrapper<AOrder> lqw = Wrappers.lambdaQuery();
         return baseMapper.selectVoList(lqw);
     }
 
-    private LambdaQueryWrapper<AOrder> buildQueryWrapper(AOrderBo bo) {
-        Map<String, Object> params = bo.getParams();
-        LambdaQueryWrapper<AOrder> lqw = Wrappers.lambdaQuery();
-        lqw.eq(bo.getCreatTime() != null, AOrder::getCreatTime, bo.getCreatTime());
-        lqw.eq(StringUtils.isNotBlank(bo.getPushUser()), AOrder::getPushUser, bo.getPushUser());
-        lqw.eq(StringUtils.isNotBlank(bo.getWork()), AOrder::getWork, bo.getWork());
-        lqw.eq(StringUtils.isNotBlank(bo.getText()), AOrder::getText, bo.getText());
-        lqw.eq(bo.getMoney() != null, AOrder::getMoney, bo.getMoney());
-        lqw.eq(bo.getLinitTime() != null, AOrder::getLinitTime, bo.getLinitTime());
-        lqw.eq(StringUtils.isNotBlank(bo.getType()), AOrder::getType, bo.getType());
-        lqw.eq(StringUtils.isNotBlank(bo.getIsPaper()), AOrder::getIsPaper, bo.getIsPaper());
-        lqw.eq(StringUtils.isNotBlank(bo.getIsRelease()), AOrder::getIsRelease, bo.getIsRelease());
-        return lqw;
-    }
+//    private LambdaQueryWrapper<AOrder> buildQueryWrapper(AOrderBo bo) {
+//        Map<String, Object> params = bo.getParams();
+//        LambdaQueryWrapper<AOrder> lqw = Wrappers.lambdaQuery();
+//        lqw.eq(StringUtils.isNotBlank(bo.getPushUser()), AOrder::getPushUser, bo.getPushUser());
+//        lqw.eq(StringUtils.isNotBlank(bo.getWork()), AOrder::getWork, bo.getWork());
+//        lqw.eq(StringUtils.isNotBlank(bo.getText()), AOrder::getText, bo.getText());
+//        lqw.eq(bo.getMoney() != null, AOrder::getMoney, bo.getMoney());
+//        lqw.eq(bo.getLinitTime() != null, AOrder::getLinitTime, bo.getLinitTime());
+//        lqw.eq(StringUtils.isNotBlank(bo.getType()), AOrder::getType, bo.getType());
+//        lqw.eq(StringUtils.isNotBlank(bo.getIsPaper()), AOrder::getIsPaper, bo.getIsPaper());
+//        lqw.eq(StringUtils.isNotBlank(bo.getIsRelease()), AOrder::getIsRelease, bo.getIsRelease());
+//        return lqw;
+//    }
 
     /**
      * 新增【请填写功能名称】
      */
     @Override
-    public Boolean insertByBo(AOrderBo bo) {
-        AOrder add = MapstructUtils.convert(bo, AOrder.class);
-        validEntityBeforeSave(add);
-        boolean flag = baseMapper.insert(add) > 0;
-        if (flag) {
-            bo.setId(add.getId());
-        }
+    public Boolean insertByBo(AOrder order) {
+        validEntityBeforeSave(order);
+        order.setCreateTime(DateUtils.getNowDate());
+        order.setDelFlag("0");
+
+        // 添加默认值
+
+
+        boolean flag = baseMapper.insert(order) > 0;
         return flag;
     }
 

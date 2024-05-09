@@ -21,9 +21,11 @@ import org.dromara.common.log.annotation.Log;
 import org.dromara.common.log.enums.BusinessType;
 import org.dromara.common.mybatis.core.page.PageQuery;
 import org.dromara.common.mybatis.core.page.TableDataInfo;
+import org.dromara.common.redis.utils.RedisUtils;
 import org.dromara.common.satoken.utils.LoginHelper;
 import org.dromara.common.tenant.helper.TenantHelper;
 import org.dromara.common.web.core.BaseController;
+import org.dromara.system.domain.SysUser;
 import org.dromara.system.domain.bo.SysDeptBo;
 import org.dromara.system.domain.bo.SysPostBo;
 import org.dromara.system.domain.bo.SysRoleBo;
@@ -148,9 +150,6 @@ public class SysUserController extends BaseController {
         return R.ok(userInfoVo);
     }
 
-    /**
-     * 新增用户
-     */
     @SaCheckPermission("system:user:add")
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @PostMapping
@@ -171,6 +170,45 @@ public class SysUserController extends BaseController {
         user.setPassword(BCrypt.hashpw(user.getPassword()));
         return toAjax(userService.insertUser(user));
     }
+
+    @PostMapping("/regisUser")
+    public R<Void> RegisUser(@RequestBody SysUser user) {
+        user.setUserName(user.getPhonenumber());
+        deptService.checkDeptDataScope(user.getDeptId());
+        if (!userService.checkUserNameUnique(user)) {
+            return R.fail("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
+        } else if (StringUtils.isNotEmpty(user.getPhonenumber()) && !userService.checkPhoneUnique(user)) {
+            return R.fail("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
+        } else if (StringUtils.isNotEmpty(user.getEmail()) && !userService.checkEmailUnique(user)) {
+            return R.fail("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
+        }
+        user.setPassword(BCrypt.hashpw(user.getPassword()));
+
+        // 设计师添加数据
+        user.setIsDesigner("1"); //是否是设计师
+        // 用户状态是：注册中  审核中  未实名 正常
+        user.setRegisStatus("注册中");
+        // 设置用户名
+        user.setNickName("设计师"+user.getPhonenumber().substring(user.getPhonenumber().length()-4));
+        // 设置邀请人
+        user.setInvitePeople(getInvitePeople(user.getInviteCode()));
+        // 设置部门名称
+        user.setDeptId(1787406424653963265L);
+        return toAjax(userService.insertRegisUser(user));
+    }
+
+    public String getInvitePeople(String inviteCode){
+        List<SysUser> list= RedisUtils.getCacheList("InviteCode: ");
+        StringBuilder invitePeople = new StringBuilder();
+        list.forEach(item->{
+            if(inviteCode.equals(item.getInviteCode())){
+                invitePeople.append(item.getUserName());
+            }
+        });
+        return invitePeople.toString();
+    }
+
+
 
     /**
      * 修改用户

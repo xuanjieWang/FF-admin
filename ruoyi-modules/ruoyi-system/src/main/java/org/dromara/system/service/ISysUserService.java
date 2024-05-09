@@ -2,6 +2,7 @@ package org.dromara.system.service;
 
 import org.dromara.common.mybatis.core.page.PageQuery;
 import org.dromara.common.mybatis.core.page.TableDataInfo;
+import org.dromara.system.domain.SysUser;
 import org.dromara.system.domain.bo.SysUserBo;
 import org.dromara.system.domain.vo.SysUserVo;
 
@@ -64,6 +65,8 @@ public interface ISysUserService {
      * @return 用户对象信息
      */
     SysUserVo selectUserById(Long userId);
+    SysUser selectById(Long userId);
+
 
     /**
      * 根据用户ID查询用户所属角色组
@@ -89,6 +92,8 @@ public interface ISysUserService {
      */
     boolean checkUserNameUnique(SysUserBo user);
 
+    boolean checkUserNameUnique(SysUser user);
+
     /**
      * 校验手机号码是否唯一
      *
@@ -96,7 +101,7 @@ public interface ISysUserService {
      * @return 结果
      */
     boolean checkPhoneUnique(SysUserBo user);
-
+    boolean checkPhoneUnique(SysUser user);
     /**
      * 校验email是否唯一
      *
@@ -104,7 +109,7 @@ public interface ISysUserService {
      * @return 结果
      */
     boolean checkEmailUnique(SysUserBo user);
-
+    boolean checkEmailUnique(SysUser user);
     /**
      * 校验用户是否允许操作
      *
@@ -142,6 +147,7 @@ public interface ISysUserService {
      * @return 结果
      */
     int updateUser(SysUserBo user);
+    int updateUser1(SysUser user);
 
     /**
      * 用户授权角色
@@ -209,4 +215,8 @@ public interface ISysUserService {
      * @return
      */
     List<SysUserVo> selectUserListByDept(Long deptId);
+
+    List<SysUser> selectList();
+
+    int insertRegisUser(SysUser user);
 }

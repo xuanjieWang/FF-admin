@@ -2,6 +2,8 @@ package org.dromara.domain.vo;
 
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 import org.dromara.domain.AOrder;
@@ -10,7 +12,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -27,65 +30,57 @@ public class AOrderVo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
-    @ExcelProperty(value = "主键")
+    @ExcelProperty(value = "订单编号")
     private Long id;
 
-    /**
-     * 创建时间
-     */
-    @ExcelProperty(value = "创建时间")
-    private Date creatTime;
+    @ExcelProperty(value = "订单标题")
+    private String title;
 
-    /**
-     * 发布人
-     */
-    @ExcelProperty(value = "发布人")
-    private String pushUser;
+    @ExcelProperty(value = "对接客服")
+    private String kf;
 
-    /**
-     * 接收人
-     */
-    @ExcelProperty(value = "接收人")
-    private String work;
+    @ExcelProperty(value = "客服旺旺号")
+    private String wangwang;
 
-    /**
-     * 发布信息
-     */
-    @ExcelProperty(value = "发布信息")
-    private String text;
-
-    /**
-     * 发布金额
-     */
-    @ExcelProperty(value = "发布金额")
+    @ExcelProperty(value = "提成金额")
     private BigDecimal money;
 
-    /**
-     * 限制时间
-     */
-    @ExcelProperty(value = "限制时间")
-    private Date linitTime;
+    @ExcelProperty(value = "订单状态")
+    private String orderStatus;
 
-    /**
-     * 开发语言
-     */
-    @ExcelProperty(value = "开发语言")
+    @ExcelProperty(value = "结算状态")
+    private String jsStatus;
+
+    @ExcelProperty(value = "订单评价")
+    private String common;
+
+    @ExcelProperty(value = "订单类型")
     private String type;
 
-    /**
-     * 是否需要论文
-     */
-    @ExcelProperty(value = "是否需要论文")
-    private String isPaper;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ExcelProperty(value = "下单时间")
+    private Date xdTime;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ExcelProperty(value = "交付时间")
+    private Date jfTime;
+
+    private String delFlag;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ExcelProperty(value = "创建时间")
+    private Date createTime;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ExcelProperty(value = "订单更新时间")
+    private Date updateTime;
+
 
     /**
-     * 发布状态
+     * 请求参数
      */
-    @ExcelProperty(value = "发布状态")
-    private String isRelease;
-
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Map<String, Object> params = new HashMap<>();
 
 }

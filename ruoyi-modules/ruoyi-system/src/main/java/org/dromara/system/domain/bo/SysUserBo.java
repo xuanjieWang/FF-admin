@@ -103,6 +103,15 @@ public class SysUserBo extends BaseEntity {
      */
     private Long roleId;
 
+    private String zfb;
+
+    private String wx;
+
+    // 是否是设计师
+    private String isDesigner;
+
+
+
     public SysUserBo(Long userId) {
         this.userId = userId;
     }

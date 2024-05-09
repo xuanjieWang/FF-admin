@@ -76,6 +76,11 @@ public class EmailAuthStrategy implements IAuthStrategy {
         return loginVo;
     }
 
+    @Override
+    public LoginVo smsLogin(String body, SysClient client) {
+        return null;
+    }
+
     /**
      * 校验邮箱验证码
      */

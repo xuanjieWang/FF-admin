@@ -1,13 +1,15 @@
 package org.dromara.system.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
-import org.dromara.common.core.constant.UserConstants;
-import org.dromara.common.tenant.core.TenantEntity;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.dromara.common.core.constant.UserConstants;
+import org.dromara.common.tenant.core.TenantEntity;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 用户对象 sys_user
@@ -103,6 +105,34 @@ public class SysUser extends TenantEntity {
      */
     private String remark;
 
+    // 邀请人
+    private String  invitePeople;
+
+    // 是否是设计师
+    private String isDesigner;
+
+    // 注册中，审核中，审核不通过，正常
+    private String regisStatus;
+
+    @TableField(exist = false)
+    private String  inviteCode;
+
+    // 设计师类别
+    private String designerType;
+
+    private String qq;
+    private String qqMail;
+    private String zfb;
+    private String wx;
+    private String name;
+    private String work;
+    private String proficient;
+    private String sfz;
+    private String sfzImg;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @TableField(exist = false)
+    private Map<String, Object> params;
 
     public SysUser(Long userId) {
         this.userId = userId;

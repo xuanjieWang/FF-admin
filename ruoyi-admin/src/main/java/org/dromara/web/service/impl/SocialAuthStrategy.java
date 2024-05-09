@@ -112,6 +112,11 @@ public class SocialAuthStrategy implements IAuthStrategy {
         return loginVo;
     }
 
+    @Override
+    public LoginVo smsLogin(String body, SysClient client) {
+        return null;
+    }
+
     private SysUserVo loadUser(String tenantId, Long userId) {
         return TenantHelper.dynamic(tenantId, () -> {
             SysUser user = userMapper.selectOne(new LambdaQueryWrapper<SysUser>()

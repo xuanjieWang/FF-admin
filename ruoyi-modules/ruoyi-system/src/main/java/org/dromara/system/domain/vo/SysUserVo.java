@@ -12,6 +12,7 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -52,6 +53,9 @@ public class SysUserVo implements Serializable {
      * 用户昵称
      */
     private String nickName;
+
+    private BigDecimal money;
+
 
     /**
      * 用户类型（sys_user系统用户）

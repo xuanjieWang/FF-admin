@@ -47,4 +47,8 @@ public interface IAOrderService {
      * 校验并批量删除【请填写功能名称】信息
      */
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+
+    TableDataInfo<AOrderVo> listHis(AOrderBo bo, PageQuery pageQuery);
+
+    int subcomm(AOrderBo bo);
 }

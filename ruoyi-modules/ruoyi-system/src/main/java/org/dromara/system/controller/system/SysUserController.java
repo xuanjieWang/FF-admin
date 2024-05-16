@@ -38,6 +38,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,6 +125,11 @@ public class SysUserController extends BaseController {
         return R.ok(userInfoVo);
     }
 
+    @GetMapping("/searchUser")
+    public TableDataInfo<SearchUserVo> searchUser(SearchUserVo userName, PageQuery pageQuery) {
+        return userService.searchUser(userName, pageQuery);
+    }
+
     /**
      * 根据用户编号获取详细信息
      *
@@ -171,6 +177,10 @@ public class SysUserController extends BaseController {
         return toAjax(userService.insertUser(user));
     }
 
+
+
+
+
     @PostMapping("/regisUser")
     public R<Void> RegisUser(@RequestBody SysUser user) {
         user.setUserName(user.getPhonenumber());
@@ -194,6 +204,7 @@ public class SysUserController extends BaseController {
         user.setInvitePeople(getInvitePeople(user.getInviteCode()));
         // 设置部门名称
         user.setDeptId(1787406424653963265L);
+        user.setMoney(new BigDecimal(0.00));
         return toAjax(userService.insertRegisUser(user));
     }
 

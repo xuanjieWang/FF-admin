@@ -14,15 +14,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 【请填写功能名称】对象 a_order
- *
- * @author Lion Li
- * @date 2024-04-16
- */
+
 @Data
-@TableName("a_order")
-public class AOrder {
+@TableName("a_account")
+public class AAccount {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -30,7 +25,14 @@ public class AOrder {
     @TableId(value = "id")
     private Long id;
 
-    private String title;
+    // 设计师账号
+    private String sjsPhone;
+    private String sjsName;
+
+    private Long orderId;
+
+    private String orderTitle;
+    private String orderType;
 
     // 客服
     private String kf;
@@ -40,38 +42,16 @@ public class AOrder {
 
     // 提成金额
     private BigDecimal money;
-
-    // 订单状态
-    private String orderStatus;
+    private BigDecimal balance;
 
     // 结算状态
     private String jsStatus;
-
-    // 订单评价
-    private String common;
-    private String commonType;
-
-    // 设计师账号
-    private String sjsPhone;
-
-    // 设计师姓名
-    private String sjsName;
-
-    //下单时间
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date xdTime;
-
-    // 交付时间
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date jfTime;
 
     /**
      * 2代表删除
      */
     @TableLogic
     private String delFlag;
-
-    private String type;
 
     /**
      * 创建时间
@@ -82,13 +62,11 @@ public class AOrder {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
-
     /**
      * 请求参数
      */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @TableField(exist = false)
     private Map<String, Object> params = new HashMap<>();
-
 
 }

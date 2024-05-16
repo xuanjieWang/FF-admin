@@ -2,6 +2,7 @@ package org.dromara.task;
 
 import jakarta.annotation.PostConstruct;
 import org.dromara.common.redis.utils.RedisUtils;
+import org.dromara.domain.vo.MoneyVo;
 import org.dromara.system.domain.SysUser;
 import org.dromara.system.service.ISysUserService;
 import org.slf4j.Logger;
@@ -23,10 +24,18 @@ public class InviteCodeTask {
 
     @PostConstruct
     public void init() {
-//        if (RedisUtils.hasKey("InviteCode: ")) {
-//            return;
-//        }
-        InitInviteCode();
+
+        // 初始化的时候没有邀请码就进行初始化
+        if (!RedisUtils.hasKey("InviteCode: ")) {
+            InitInviteCode();
+        }
+
+        // 设置提现时间
+        if (!RedisUtils.hasKey("txTime: ")) {
+            InitTxTime();
+        }
+
+
     }
     @Scheduled(cron = "0 04 30 * * ?")
     public void InitInviteCode() {
@@ -56,6 +65,16 @@ public class InviteCodeTask {
             sb.append(random.nextInt(10));
         }
         return sb.toString();
+    }
+
+    public void InitTxTime(){
+        // 提现时间, 默认是月
+        MoneyVo moneyVo = new MoneyVo();
+        moneyVo.setType("month");
+        moneyVo.setBeginTime(5);
+        moneyVo.setEndTime(10);
+        RedisUtils.setCacheObject("txTime: ", moneyVo);
+        log.info("初始化提现时间------success");
     }
 }
 

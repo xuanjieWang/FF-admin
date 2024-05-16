@@ -4,6 +4,7 @@ import org.dromara.common.mybatis.core.page.PageQuery;
 import org.dromara.common.mybatis.core.page.TableDataInfo;
 import org.dromara.system.domain.SysUser;
 import org.dromara.system.domain.bo.SysUserBo;
+import org.dromara.system.domain.vo.SearchUserVo;
 import org.dromara.system.domain.vo.SysUserVo;
 
 import java.util.List;
@@ -56,7 +57,7 @@ public interface ISysUserService {
      * @param phonenumber 手机号
      * @return 用户对象信息
      */
-    SysUserVo selectUserByPhonenumber(String phonenumber);
+    SysUser selectUserByPhonenumber(String phonenumber);
 
     /**
      * 通过用户ID查询用户
@@ -219,4 +220,9 @@ public interface ISysUserService {
     List<SysUser> selectList();
 
     int insertRegisUser(SysUser user);
+
+    SysUser selectUserByPhone(String sjsPhone);
+
+    TableDataInfo<SearchUserVo> searchUser(SearchUserVo userName, PageQuery pageQuery);
+
 }

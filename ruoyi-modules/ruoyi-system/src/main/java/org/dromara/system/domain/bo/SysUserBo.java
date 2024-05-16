@@ -12,6 +12,8 @@ import org.dromara.common.core.xss.Xss;
 import org.dromara.common.mybatis.core.domain.BaseEntity;
 import org.dromara.system.domain.SysUser;
 
+import java.math.BigDecimal;
+
 /**
  * 用户信息业务对象 sys_user
  *
@@ -106,6 +108,9 @@ public class SysUserBo extends BaseEntity {
     private String zfb;
 
     private String wx;
+
+    private BigDecimal money;
+
 
     // 是否是设计师
     private String isDesigner;

@@ -8,7 +8,6 @@ import org.dromara.domain.Audit;
 import org.dromara.service.IAuditService;
 import org.dromara.system.domain.SysUser;
 import org.dromara.system.service.ISysUserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -60,10 +59,16 @@ public class AuditController extends BaseController {
         // 如果审核通过，将信息存储到用户表中，再将审核状态改变为未审核
         if("yes".equals(audit.getAudit())) {
             sysUser.setRegisStatus("审核通过");
-            BeanUtils.copyProperties(result,sysUser);
+            sysUser.setName(result.getName());
+            sysUser.setQq(result.getQq());
+            sysUser.setQqMail(result.getQqMail());
+            sysUser.setZfb(result.getZfb());
+            sysUser.setWork(result.getWork());
+            sysUser.setProficient(result.getProficient());
         }else{
             sysUser.setRegisStatus("审核不通过");
         }
+        auditService.deleteById(result.getId());
         userService.updateUser1(sysUser);
         return R.ok();
     }

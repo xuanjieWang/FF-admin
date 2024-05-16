@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.dromara.common.core.constant.UserConstants;
 import org.dromara.common.tenant.core.TenantEntity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -104,6 +105,8 @@ public class SysUser extends TenantEntity {
      * 备注
      */
     private String remark;
+
+    private BigDecimal money;
 
     // 邀请人
     private String  invitePeople;

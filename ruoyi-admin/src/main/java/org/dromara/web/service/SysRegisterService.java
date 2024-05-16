@@ -25,6 +25,8 @@ import org.dromara.system.mapper.SysUserMapper;
 import org.dromara.system.service.ISysUserService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 /**
  * 注册校验方法
  *
@@ -58,6 +60,7 @@ public class SysRegisterService {
         sysUser.setNickName(username);
         sysUser.setPassword(BCrypt.hashpw(password));
         sysUser.setUserType(userType);
+        sysUser.setMoney(new BigDecimal("0.00"));
 
         boolean exist = TenantHelper.dynamic(tenantId, () -> {
             return userMapper.exists(new LambdaQueryWrapper<SysUser>()

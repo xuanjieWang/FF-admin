@@ -27,6 +27,7 @@ import org.dromara.system.domain.SysUser;
 import org.dromara.system.domain.SysUserPost;
 import org.dromara.system.domain.SysUserRole;
 import org.dromara.system.domain.bo.SysUserBo;
+import org.dromara.system.domain.vo.SearchUserVo;
 import org.dromara.system.domain.vo.SysPostVo;
 import org.dromara.system.domain.vo.SysRoleVo;
 import org.dromara.system.domain.vo.SysUserVo;
@@ -151,8 +152,10 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
      * @return 用户对象信息
      */
     @Override
-    public SysUserVo selectUserByPhonenumber(String phonenumber) {
-        return baseMapper.selectUserByPhonenumber(phonenumber);
+    public SysUser selectUserByPhonenumber(String phonenumber) {
+        LambdaQueryWrapper<SysUser> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(SysUser::getPhonenumber, phonenumber);
+        return baseMapper.selectOne(lqw);
     }
 
     /**
@@ -222,6 +225,22 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
                 .eq(SysUser::getUserName, user.getUserName())
                 .ne(ObjectUtil.isNotNull(user.getUserId()), SysUser::getUserId, user.getUserId()));
         return !exist;
+    }
+
+    @Override
+    public TableDataInfo<SearchUserVo> searchUser(SearchUserVo searchUser, PageQuery pageQuery) {
+        LambdaQueryWrapper<SysUser> lqw = new LambdaQueryWrapper<>();
+        lqw.isNotNull(SysUser::getName).and(w->w.ne(SysUser::getName, ""));
+
+        Page<SearchUserVo> page;
+        if (!"all".equals(searchUser.getName())) {
+            lqw.like(SysUser::getName, searchUser.getName());
+            page = baseMapper.searchUser(pageQuery.build(), lqw);
+        } else {
+            page = baseMapper.searchUser(pageQuery.build(),lqw);
+        }
+
+        return TableDataInfo.build(page);
     }
 
     /**
@@ -352,6 +371,7 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         }
         return flag;
     }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int updateUser1(SysUser user) {
@@ -590,7 +610,12 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         return rows;
     }
 
-
+    @Override
+    public SysUser selectUserByPhone(String sjsPhone) {
+        LambdaQueryWrapper<SysUser> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(SysUser::getPhonenumber, sjsPhone);
+        return baseMapper.selectOne(lqw);
+    }
 
     @Override
     public List<SysUser> selectList() {

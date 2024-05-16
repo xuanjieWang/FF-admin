@@ -1,5 +1,8 @@
 package org.dromara.domain.bo;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.linpeilie.annotations.AutoMapper;
@@ -13,80 +16,53 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 【请填写功能名称】业务对象 a_order
- *
- * @author Lion Li
- * @date 2024-04-16
- */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AutoMapper(target = AOrder.class, reverseConvertGenerate = false)
-public class AOrderBo extends BaseEntity {
+public class AAccountBo extends BaseEntity {
 
     private Long id;
 
-    private String title;
+    private String sjsPhone;
+    private String sjsName;
+    private String orderType;
 
-    // 客服
+
+    private Long orderId;
+
+    private String orderTitle;
+
     private String kf;
 
-    // 旺旺号
     private String wangwang;
 
-    // 提成金额
     private BigDecimal money;
 
-    private BigDecimal ye;
+    // 余额
+    private BigDecimal balance;
 
-    // 订单状态
-    private String orderStatus;
-
-
-    private String type;
-    // 结算状态
     private String jsStatus;
 
-    // 订单评价
-    private String common;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date xdTime;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date jfTime;
-
-    /**
-     * 2代表删除
-     */
+    @TableLogic
+    @ExcelProperty(value = "2代表删除")
     private String delFlag;
 
-    private String commonType;
-
-    private String userId;
-
-
-    // 设计师账号
-    private String sjsPhone;
-
-    // 设计师姓名
-    private String sjsName;
-    /**
-     * 创建时间
-     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ExcelProperty(value = "创建时间")
     private Date createTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ExcelProperty(value = "更新时间")
     private Date updateTime;
+
+    // 部门名称
+    private String deptName;
 
     /**
      * 请求参数
      */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @TableField(exist = false)
     private Map<String, Object> params = new HashMap<>();
-
-
-    private String deptName;
 
 }

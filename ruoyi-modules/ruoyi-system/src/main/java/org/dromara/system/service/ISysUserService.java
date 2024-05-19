@@ -225,4 +225,5 @@ public interface ISysUserService {
 
     TableDataInfo<SearchUserVo> searchUser(SearchUserVo userName, PageQuery pageQuery);
 
+    List<SysUser> selectUserByCreateTime();
 }

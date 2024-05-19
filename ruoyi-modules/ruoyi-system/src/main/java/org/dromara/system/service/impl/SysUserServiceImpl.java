@@ -154,7 +154,7 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
     @Override
     public SysUser selectUserByPhonenumber(String phonenumber) {
         LambdaQueryWrapper<SysUser> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(SysUser::getPhonenumber, phonenumber);
+        lqw.eq(SysUser::getUserName, phonenumber);
         return baseMapper.selectOne(lqw);
     }
 
@@ -623,6 +623,15 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
         lqw.eq(SysUser::getIsDesigner, "0");
         lqw.eq(SysUser::getDelFlag, "0");
         return baseMapper.selectList(lqw);
+    }
+
+    @Override
+    public List<SysUser> selectUserByCreateTime() {
+            LambdaQueryWrapper<SysUser> lqw = new LambdaQueryWrapper<>();
+            lqw.eq(SysUser::getIsDesigner, "0");
+            lqw.eq(SysUser::getDelFlag, "0");
+            lqw.orderByDesc(SysUser::getCreateTime);
+            return baseMapper.selectList(lqw);
     }
 
     @Cacheable(cacheNames = CacheNames.SYS_USER_NAME, key = "#userId")

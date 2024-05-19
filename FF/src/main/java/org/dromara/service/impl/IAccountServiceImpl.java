@@ -39,6 +39,7 @@ public class IAccountServiceImpl implements IAccountService {
         return TableDataInfo.build(result);
     }
 
+
     // 项目结算成功的时候添加信息
     @Override
     public boolean addAccount(AOrderBo bo) {
@@ -101,4 +102,6 @@ public class IAccountServiceImpl implements IAccountService {
 
         return baseMapper.insert(aAccount);
     }
+
+
 }

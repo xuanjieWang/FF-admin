@@ -37,7 +37,7 @@ public class IAuditServiceImpl implements IAuditService {
     @Override
     public List<Audit> getListByUserName(String InvitePeople) {
         LambdaQueryWrapper<Audit> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(Audit::getInvitePeople,InvitePeople);
+//        lqw.eq(Audit::getInvitePeople,InvitePeople);
         lqw.orderByDesc(Audit::getCreateTime);
         return baseMapper.selectList(lqw);
     }

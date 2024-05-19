@@ -116,12 +116,10 @@ public class AOrderServiceImpl implements IAOrderService {
 
         // 交易成功，直接去调用操作余额表
         if(StringUtils.isNotBlank(bo.getOrderStatus() )&& "交易完成".equals(bo.getOrderStatus())){
-            update.setUpdateTime(DateUtils.getNowDate());
             boolean b = countsService.addAccount(bo);
             if(!b) return false;
-        }else if ("交易失败".equals(bo.getOrderStatus())){
-            update.setUpdateTime(DateUtils.getNowDate());
         }
+        update.setUpdateTime(DateUtils.getNowDate());
 
         return baseMapper.updateById(update) > 0;
     }

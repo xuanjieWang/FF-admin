@@ -36,6 +36,7 @@ public class InviteCodeTask {
         }
 
 
+
     }
     @Scheduled(cron = "0 04 30 * * ?")
     public void InitInviteCode() {
@@ -54,11 +55,37 @@ public class InviteCodeTask {
 
         List<SysUser> list1= RedisUtils.getCacheList("InviteCode: ");
         list1.forEach(item->{
-            System.out.println(item.getUserName()+item.getNickName());
+            System.out.println(item.getUserName()+"--------"+item.getUserId()+"------"+item.getInviteCode());
         });
     }
 
-    public  String getInviteCode(){
+
+    // 每10分钟刷新一次验证码
+    @Scheduled(fixedRate = 1000 * 60 * 10)
+    public void checkCode() {
+        List<SysUser> list= RedisUtils.getCacheList("InviteCode: ");
+        List<SysUser> users = sysUserService.selectUserByCreateTime();
+
+        // 不需要更新验证码
+        if(list.size() == users.size()) return;
+        for (int i = 0; i < (users.size() - list.size()); i++){
+            SysUser user = users.get(i);
+            if(user.getInviteCode() == null){
+                SysUser item = new SysUser();
+                item.setUserId(user.getUserId());
+                item.setUserName(user.getUserName());
+                item.setInviteCode(getInviteCode());
+                list.add(user);
+            }
+        }
+        RedisUtils.deleteKeys("InviteCode: ");
+        RedisUtils.setCacheList("InviteCode: ", list);
+        log.info("执行检查邀请码---add邀请码()  success: count----"+(users.size() - list.size()));
+
+    }
+
+
+    public static String getInviteCode(){
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 6; i++) {

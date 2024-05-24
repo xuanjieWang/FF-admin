@@ -36,6 +36,9 @@ public class AOrderVo implements Serializable {
     @ExcelProperty(value = "订单标题")
     private String title;
 
+    @ExcelProperty(value = "订单淘宝账号")
+    private String type;
+
     @ExcelProperty(value = "对接客服")
     private String kf;
 
@@ -51,14 +54,17 @@ public class AOrderVo implements Serializable {
     @ExcelProperty(value = "结算状态")
     private String jsStatus;
 
-    @ExcelProperty(value = "订单评价")
-    private String common;
+    @ExcelProperty(value = "提现状态")
+    private String txStatus;
 
-    @ExcelProperty(value = "订单类型")
-    private String type;
+//    @ExcelProperty(value = "订单评价")
+//    private String common;
+//
+//    @ExcelProperty(value = "订单评价类型")
+//    private String commonType;
 
-    @ExcelProperty(value = "订单评价类型")
-    private String commonType;
+
+
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ExcelProperty(value = "下单时间")

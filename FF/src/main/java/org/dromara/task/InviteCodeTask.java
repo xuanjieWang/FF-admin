@@ -35,10 +35,8 @@ public class InviteCodeTask {
             InitTxTime();
         }
 
-
-
     }
-    @Scheduled(cron = "0 04 30 * * ?")
+    @Scheduled(cron = "0 30 3 * * ?")
     public void InitInviteCode() {
         List<SysUser> list = new ArrayList();
         List<SysUser> users = sysUserService.selectList();

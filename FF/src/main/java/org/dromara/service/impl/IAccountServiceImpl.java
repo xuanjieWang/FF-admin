@@ -7,6 +7,7 @@ import org.dromara.common.core.utils.DateUtils;
 import org.dromara.common.mybatis.core.page.PageQuery;
 import org.dromara.common.mybatis.core.page.TableDataInfo;
 import org.dromara.domain.AAccount;
+import org.dromara.domain.AOrder;
 import org.dromara.domain.bo.AAccountBo;
 import org.dromara.domain.bo.AOrderBo;
 import org.dromara.domain.vo.AAccountVo;
@@ -57,10 +58,47 @@ public class IAccountServiceImpl implements IAccountService {
         aAccount.setDelFlag("0");
         aAccount.setOrderType(bo.getType());
 
+        // 判断设计师是否存在
         SysUser sjs = sysUserService.selectUserByPhonenumber(bo.getSjsPhone());
         if(null == sjs) {
             return false;
         }
+
+        // 设置余额, 先设置订单然后设置用户
+        if(null == sjs.getMoney()){
+            aAccount.setBalance(bo.getMoney());
+            sjs.setMoney(bo.getMoney());
+        }else{
+            aAccount.setBalance(bo.getMoney().add(sjs.getMoney()));
+            sjs.setMoney(bo.getMoney().add(sjs.getMoney()));
+        }
+        sysUserService.updateUser1(sjs);
+        baseMapper.insert(aAccount);
+        return true;
+    }
+
+    @Override
+    public boolean addAccount(AOrder bo) {
+
+        AAccount aAccount = new AAccount();
+        aAccount.setOrderTitle(bo.getTitle());
+        aAccount.setOrderId(bo.getId());
+        aAccount.setKf(bo.getKf());
+        aAccount.setJsStatus(bo.getJsStatus());
+        aAccount.setSjsPhone(bo.getSjsPhone());
+        aAccount.setSjsName(bo.getSjsName());
+        aAccount.setWangwang(bo.getWangwang());
+        aAccount.setMoney(bo.getMoney()); //交易金额
+        aAccount.setCreateTime(DateUtils.getNowDate());
+        aAccount.setDelFlag("0");
+        aAccount.setOrderType(bo.getType());
+
+        // 判断设计师是否存在
+        SysUser sjs = sysUserService.selectUserByPhonenumber(bo.getSjsPhone());
+        if(null == sjs) {
+            return false;
+        }
+
         // 设置余额, 先设置订单然后设置用户
         if(null == sjs.getMoney()){
             aAccount.setBalance(bo.getMoney());

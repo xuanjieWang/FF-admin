@@ -8,15 +8,19 @@ import org.dromara.common.core.utils.DateUtils;
 import org.dromara.common.core.utils.StringUtils;
 import org.dromara.common.mybatis.core.page.PageQuery;
 import org.dromara.common.mybatis.core.page.TableDataInfo;
+import org.dromara.domain.AOrder;
 import org.dromara.domain.ATx;
 import org.dromara.domain.bo.ATxBo;
 import org.dromara.domain.vo.ATxVo;
 import org.dromara.mapper.AATxMapper;
+import org.dromara.service.IAOrderService;
 import org.dromara.service.IATxService;
 import org.dromara.system.domain.SysUser;
 import org.dromara.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +29,9 @@ public class IATxServiceImpl implements IATxService {
 
     @Autowired
     private ISysUserService sysUserService;
+    @Autowired
+    private IAOrderService orderService;
+
 
     @Override
     public TableDataInfo<ATxVo> queryPageList(ATxBo bo, PageQuery pageQuery) {
@@ -60,14 +67,26 @@ public class IATxServiceImpl implements IATxService {
             return R.fail("该提现申请已经审核，不可重复申请");
         }
 
+        List<AOrder> txOrder = orderService.getTxOrder(bo.getSjsPhone());
+
+
         // 提现失败需要退还金额
         if ("1".equals(bo.getSuccessFlag())) {
             user.setMoney(user.getMoney().add(bo.getMoney()));
             sysUserService.updateUser1(user);
             bo.setBalance(user.getMoney());
+            txOrder.forEach(item -> {
+                item.setTxStatus("订单取消");
+            });
+        } else {
+            txOrder.forEach(item -> {
+                item.setTxStatus("已提现");
+            });
         }
+
         bo.setTxTime(DateUtils.getNowDate());
         baseMapper.updateById(bo);
+        orderService.updateBatchById(txOrder);
 
         return R.ok();
     }
@@ -93,6 +112,12 @@ public class IATxServiceImpl implements IATxService {
         bo.setBalance(user.getMoney());
         bo.setCreateTime(DateUtils.getNowDate());
         bo.setDelFlag("0");
+
+
+        // 如果有提现原因就是扣款
+        if(StringUtils.isNotBlank(bo.getMessage())){
+            bo.setTxTime(DateUtils.getNowDate());
+        }
         baseMapper.insert(bo);
         return R.ok();
     }

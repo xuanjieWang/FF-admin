@@ -51,4 +51,12 @@ public interface IAOrderService {
     TableDataInfo<AOrderVo> listHis(AOrderBo bo, PageQuery pageQuery);
 
     int subcomm(AOrderBo bo);
+
+    List<AOrder> getHYOrder();
+
+    void updateById(AOrder item);
+
+    List<AOrder> getTxOrder(String phoneNumber);
+
+    void updateBatchById(List<AOrder> txOrder);
 }

@@ -47,9 +47,8 @@ public class AOrder {
     // 结算状态
     private String jsStatus;
 
-    // 订单评价
-    private String common;
-    private String commonType;
+    // 提现状态
+    private String txStatus;
 
     // 设计师账号
     private String sjsPhone;

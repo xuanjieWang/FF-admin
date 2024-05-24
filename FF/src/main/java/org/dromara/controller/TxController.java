@@ -46,7 +46,8 @@ public class TxController {
     // 提现申请
     @SaCheckPermission("tx:data:setTx")
     @PostMapping("/setTx")
-    public R<Void> setTx(@RequestBody ATx bo) {
+    @Transactional(rollbackFor = Exception.class)
+    public R setTx(@RequestBody ATx bo) {
         return txService.setTx(bo);
     }
 

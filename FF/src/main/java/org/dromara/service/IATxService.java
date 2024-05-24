@@ -12,7 +12,8 @@ public interface IATxService {
 
     R<Void> adopt(ATx bo);
 
-    R<Void> setTx(ATx bo);
+    R setTx(ATx bo);
 
     TableDataInfo<ATxVo> queryPageListDis(ATxBo bo, PageQuery pageQuery);
+
 }

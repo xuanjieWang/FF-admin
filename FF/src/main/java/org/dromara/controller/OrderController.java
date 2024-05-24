@@ -119,4 +119,14 @@ public class OrderController extends BaseController {
                           @PathVariable Long[] ids) {
         return toAjax(aOrderService.deleteWithValidByIds(List.of(ids), true));
     }
+
+    /**
+        查询需要提现的订单
+     */
+    @SaCheckPermission("system:order:getTxOrder")
+    @GetMapping("/getTxOrder/{phoneNumber}")
+    public R<List<AOrder>> getTxOrder(@PathVariable String phoneNumber) {
+        return R.ok(aOrderService.getTxOrder((phoneNumber)));
+    }
+
 }

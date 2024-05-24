@@ -47,8 +47,8 @@ public class AOrderBo extends BaseEntity {
     // 结算状态
     private String jsStatus;
 
-    // 订单评价
-    private String common;
+    // 提现状态
+    private String txStatus;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date xdTime;
@@ -60,8 +60,6 @@ public class AOrderBo extends BaseEntity {
      * 2代表删除
      */
     private String delFlag;
-
-    private String commonType;
 
     private String userId;
 

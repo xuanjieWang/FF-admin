@@ -1,4 +1,4 @@
-package org.dromara.domain;
+package org.wx.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -10,47 +10,31 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 
 @Data
-@TableName("a_account")
-public class AAccount implements Serializable {
-
+@TableName("a_wx_image")
+public class WxImage implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id")
-    private Long id;
+    @TableId
+    private int id;
 
-    // 设计师账号
-    private String sjsPhone;
-    private String sjsName;
+    // 名称
+    private String name;
 
-    private Long orderId;
+    private String path;
 
-    private String orderTitle;
-    private String orderType;
+    // 是滑动的还是下下面的图
+    private String position;
 
-    // 客服
-    private String kf;
+    // 排序
+    private int sort;
 
-    // 旺旺号
-    private String wangwang;
-
-    // 提成金额
-    private BigDecimal money;
-    private BigDecimal balance;
-
-    // 结算状态
-    private String jsStatus;
-
-    /**
-     * 2代表删除
-     */
     @TableLogic
     private String delFlag;
 
@@ -69,5 +53,6 @@ public class AAccount implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @TableField(exist = false)
     private Map<String, Object> params = new HashMap<>();
+
 
 }

@@ -16,4 +16,5 @@ public interface IATxService {
 
     TableDataInfo<ATxVo> queryPageListDis(ATxBo bo, PageQuery pageQuery);
 
+    R getDisOrderList(ATx bo);
 }

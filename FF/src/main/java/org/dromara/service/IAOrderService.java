@@ -56,7 +56,7 @@ public interface IAOrderService {
 
     void updateById(AOrder item);
 
-    List<AOrder> getTxOrder(String phoneNumber);
+    List<AOrder> getTxOrder(AOrderVo orderVo);
 
     void updateBatchById(List<AOrder> txOrder);
 }

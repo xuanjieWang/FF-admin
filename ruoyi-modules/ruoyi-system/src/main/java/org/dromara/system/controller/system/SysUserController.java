@@ -68,6 +68,15 @@ public class SysUserController extends BaseController {
         return userService.selectPageUserList(user, pageQuery);
     }
 
+    // 查询设计师列表
+    @SaCheckPermission("system:user:list")
+    @GetMapping("/listsjs")
+    public TableDataInfo<SysUserVo> listsjs(SysUser user, PageQuery pageQuery) {
+        return userService.listsjs(user, pageQuery);
+    }
+
+
+
     /**
      * 导出用户列表
      */
@@ -176,6 +185,9 @@ public class SysUserController extends BaseController {
         user.setPassword(BCrypt.hashpw(user.getPassword()));
         return toAjax(userService.insertUser(user));
     }
+
+
+
 
 
 

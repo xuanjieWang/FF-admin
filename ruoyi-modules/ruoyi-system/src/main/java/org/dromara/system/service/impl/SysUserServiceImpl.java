@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -153,8 +154,9 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
      */
     @Override
     public SysUser selectUserByPhonenumber(String phonenumber) {
+        System.out.println("查询用户的电话时----"+phonenumber);
         LambdaQueryWrapper<SysUser> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(SysUser::getUserName, phonenumber);
+        lqw.eq(SysUser::getPhonenumber, phonenumber);
         return baseMapper.selectOne(lqw);
     }
 
@@ -632,6 +634,18 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
             lqw.eq(SysUser::getDelFlag, "0");
             lqw.orderByDesc(SysUser::getCreateTime);
             return baseMapper.selectList(lqw);
+    }
+
+    // 查询设计师
+    @Override
+    public TableDataInfo<SysUserVo> listsjs(SysUser user, PageQuery pageQuery) {
+        LambdaQueryWrapper<SysUser> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(StringUtils.isNotBlank(user.getName()), SysUser::getName, user.getName());
+        lqw.eq(StringUtils.isNotBlank(user.getPhonenumber()), SysUser::getPhonenumber, user.getPhonenumber());
+        lqw.orderByDesc(SysUser::getCreateTime);
+        lqw.eq(SysUser::getDelFlag, "0");
+        IPage<SysUserVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
+        return TableDataInfo.build(result);
     }
 
     @Cacheable(cacheNames = CacheNames.SYS_USER_NAME, key = "#userId")

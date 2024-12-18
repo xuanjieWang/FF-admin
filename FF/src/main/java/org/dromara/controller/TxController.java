@@ -38,8 +38,8 @@ public class TxController {
     //审核
     @SaCheckPermission("tx:data:adopt")
     @Transactional(rollbackFor = Exception.class)
-    @RequestMapping("/adopt")
-    public R<Void> adopt(ATx bo) {
+    @PostMapping("/adopt")
+    public R<Void> adopt(@RequestBody ATx bo) {
         return txService.adopt(bo);
     }
 
@@ -49,6 +49,14 @@ public class TxController {
     @Transactional(rollbackFor = Exception.class)
     public R setTx(@RequestBody ATx bo) {
         return txService.setTx(bo);
+    }
+
+    // 查询当前用户的扣款订单，订单时间
+    @SaCheckPermission("tx:data:list")
+    @PostMapping("/getDisOrderList")
+    @Transactional(rollbackFor = Exception.class)
+    public R getDisOrderList(@RequestBody ATx bo) {
+        return txService.getDisOrderList(bo);
     }
 
 

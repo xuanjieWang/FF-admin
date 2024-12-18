@@ -124,9 +124,9 @@ public class OrderController extends BaseController {
         查询需要提现的订单
      */
     @SaCheckPermission("system:order:getTxOrder")
-    @GetMapping("/getTxOrder/{phoneNumber}")
-    public R<List<AOrder>> getTxOrder(@PathVariable String phoneNumber) {
-        return R.ok(aOrderService.getTxOrder((phoneNumber)));
+    @PostMapping("/getTxOrder")
+    public R<List<AOrder>> getTxOrder(AOrderVo orderVo) {
+        return R.ok(aOrderService.getTxOrder((orderVo)));
     }
 
 }

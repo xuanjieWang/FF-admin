@@ -1,6 +1,9 @@
 package org.dromara.domain;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -28,6 +31,8 @@ public class ATx {
     private BigDecimal money;
     private BigDecimal balance;
     private String successFlag;
+
+    private String type;
 
     // 账户扣款
     private String message;

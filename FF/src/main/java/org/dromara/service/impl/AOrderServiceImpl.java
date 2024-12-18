@@ -123,8 +123,6 @@ public class AOrderServiceImpl implements IAOrderService {
         AOrder update = MapstructUtils.convert(bo, AOrder.class);
         validEntityBeforeSave(update);
 
-
-
         // 交易成功，直接去调用操作余额表
         if(StringUtils.isNotBlank(bo.getOrderStatus() )&& "交易完成".equals(bo.getOrderStatus())){
 
@@ -146,8 +144,8 @@ public class AOrderServiceImpl implements IAOrderService {
                     update.setTxStatus("待提现");
                 }
                 baseMapper.updateById(update);
-//            }, 7, TimeUnit.DAYS);
-        }, 5, TimeUnit.MINUTES);
+            }, 7, TimeUnit.DAYS);
+//        }, 5, TimeUnit.MINUTES);
             executorService.shutdown();
         }
 
@@ -217,11 +215,19 @@ public class AOrderServiceImpl implements IAOrderService {
         baseMapper.updateById(item);
     }
 
+
+    /**
+     * 获取提现订单
+     * 1. 设计师名称
+     * 2. 审核的时候 订单创建时间一定要小于提现的时间
+     * **/
     @Override
-    public List<AOrder> getTxOrder(String phoneNumber) {
+    public List<AOrder> getTxOrder(AOrderVo orderVo) {
         LambdaQueryWrapper<AOrder> lqw = new LambdaQueryWrapper<>();
         lqw.eq(AOrder::getTxStatus,"待提现");
-        lqw.eq(AOrder::getSjsPhone,phoneNumber);
+        lqw.eq(AOrder::getSjsPhone,orderVo.getSjsPhone());
+        lqw.lt(null != orderVo.getCreateTime(), AOrder::getCreateTime, orderVo.getCreateTime());
+
         lqw.orderByDesc(AOrder::getCreateTime);
         return baseMapper.selectList(lqw);
     }

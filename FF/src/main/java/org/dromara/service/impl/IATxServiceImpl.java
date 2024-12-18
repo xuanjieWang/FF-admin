@@ -11,6 +11,7 @@ import org.dromara.common.mybatis.core.page.TableDataInfo;
 import org.dromara.domain.AOrder;
 import org.dromara.domain.ATx;
 import org.dromara.domain.bo.ATxBo;
+import org.dromara.domain.vo.AOrderVo;
 import org.dromara.domain.vo.ATxVo;
 import org.dromara.mapper.AATxMapper;
 import org.dromara.service.IAOrderService;
@@ -67,8 +68,11 @@ public class IATxServiceImpl implements IATxService {
             return R.fail("该提现申请已经审核，不可重复申请");
         }
 
-        List<AOrder> txOrder = orderService.getTxOrder(bo.getSjsPhone());
+        AOrderVo vo = new AOrderVo();
+        vo.setSjsPhone(bo.getSjsPhone());
+        vo.setCreateTime(tx.getCreateTime());
 
+        List<AOrder> txOrder = orderService.getTxOrder(vo);
 
         // 提现失败需要退还金额
         if ("1".equals(bo.getSuccessFlag())) {
@@ -91,7 +95,10 @@ public class IATxServiceImpl implements IATxService {
         return R.ok();
     }
 
-    // 申请提现
+    /**
+     * 1. 申请体现，将体现金额扣除
+     * 2. 设置提现时间
+     * **/
     @Override
     public R<Void> setTx(ATx bo) {
         SysUser user = sysUserService.selectUserByPhonenumber(bo.getSjsPhone());
@@ -100,7 +107,7 @@ public class IATxServiceImpl implements IATxService {
 
         // 提现金额不足
         if (0 > user.getMoney().compareTo(bo.getMoney())) {
-            return R.fail("提现金额不足");
+            return R.fail("操作金额不足");
         }
 
         // 设置用户余额
@@ -113,7 +120,6 @@ public class IATxServiceImpl implements IATxService {
         bo.setCreateTime(DateUtils.getNowDate());
         bo.setDelFlag("0");
 
-
         // 如果有提现原因就是扣款
         if(StringUtils.isNotBlank(bo.getMessage())){
             bo.setTxTime(DateUtils.getNowDate());
@@ -123,4 +129,16 @@ public class IATxServiceImpl implements IATxService {
     }
 
 
+    /**
+     * 查询出用户的扣款订单
+     * 查询出扣款订单是在
+     * **/
+    @Override
+    public R getDisOrderList(ATx bo) {
+        LambdaQueryWrapper<ATx> lqw = new LambdaQueryWrapper<>();
+        lqw.isNotNull(ATx::getMessage);
+        lqw.eq(ATx::getDelFlag, "0");
+        lqw.eq(ATx::getSuccessFlag, "3");
+        return R.ok(baseMapper.selectList(lqw));
+    }
 }

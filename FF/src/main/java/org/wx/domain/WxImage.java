@@ -29,8 +29,10 @@ public class WxImage implements Serializable {
 
     private String path;
 
-    // 是滑动的还是下下面的图
-    private String position;
+    private String type;
+
+    // 图片位置
+    private String region;
 
     // 排序
     private int sort;

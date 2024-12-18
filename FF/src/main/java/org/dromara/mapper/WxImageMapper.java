@@ -1,8 +1,8 @@
-package org.wx.mapper;
+package org.dromara.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.wx.domain.WxImage;
+import org.dromara.domain.WxImage;
 
 /**
  * 【请填写功能名称】Mapper接口

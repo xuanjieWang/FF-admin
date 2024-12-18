@@ -1,5 +1,4 @@
-package org.wx.domain;
-
+package org.dromara.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -18,8 +17,8 @@ import java.util.Map;
 
 // 前端图标
 @Data
-@TableName("a_wx_title")
-public class WxTitle implements Serializable {
+@TableName("a_wx_icon")
+public class WxIcon implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

@@ -1,14 +1,6 @@
-package org.wx.controller;
+package org.dromara.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
-import org.dromara.common.core.domain.R;
-import org.dromara.common.mybatis.core.page.PageQuery;
-import org.dromara.common.mybatis.core.page.TableDataInfo;
 import org.dromara.common.web.core.BaseController;
-import org.dromara.domain.bo.AAccountBo;
-import org.dromara.domain.bo.AOrderBo;
-import org.dromara.domain.vo.AAccountVo;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

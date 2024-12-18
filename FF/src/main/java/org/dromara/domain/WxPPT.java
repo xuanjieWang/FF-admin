@@ -1,7 +1,8 @@
-package org.wx.domain;
+package org.dromara.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -13,10 +14,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-// ppt type
+// PPT文件路径
 @Data
-@TableName("a_wx_type")
-public class WxType implements Serializable {
+@TableName("a_wx_ppt")
+public class WxPPT implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -26,8 +27,17 @@ public class WxType implements Serializable {
     // 名称
     private String name;
 
-    // 类型,一个ppt可以创建多个类型
+    // 类型
     private String type;
+
+    // oss地址
+    private String path;
+
+    // 排序
+    private int sort;
+
+    @TableLogic
+    private String delFlag;
 
     /**
      * 创建时间
